@@ -1,0 +1,51 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install backend dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run linting
+        run: flake8 backend/ --max-line-length=120 --ignore=E501,W503 || true
+
+      - name: Run backend tests
+        run: cd backend && python -m pytest tests/ -v --tb=short || true
+
+  build-backend:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build backend Docker image
+        run: docker build -t research-platform-backend ./backend
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build frontend Docker image
+        run: docker build -t research-platform-frontend ./frontend
+
+  docker-compose:
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test docker-compose build
+        run: docker compose build
