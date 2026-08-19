@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI Pipeline
 
 on:
   push:
@@ -26,26 +26,15 @@ jobs:
       - name: Run backend tests
         run: cd backend && python -m pytest tests/ -v --tb=short || true
 
-  build-backend:
-    runs-on: ubuntu-latest
-    needs: lint-and-test
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build backend Docker image
-        run: docker build -t research-platform-backend ./backend
-
   build-frontend:
     runs-on: ubuntu-latest
-    needs: lint-and-test
     steps:
       - uses: actions/checkout@v4
-      - name: Build frontend Docker image
-        run: docker build -t research-platform-frontend ./frontend
 
-  docker-compose:
-    runs-on: ubuntu-latest
-    needs: [build-backend, build-frontend]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test docker-compose build
-        run: docker compose build
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install and build frontend
+        run: cd frontend && npm install && npm run build

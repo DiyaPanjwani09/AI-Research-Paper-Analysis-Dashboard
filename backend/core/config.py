@@ -7,20 +7,18 @@ class Settings(BaseSettings):
     app_name: str = "AI Research Intelligence Platform"
     environment: str = "development"
     host: str = "0.0.0.0"
-    port: int = 8000
+    port: int = int(os.getenv("PORT", "8000"))
 
-    database_url: str = ""
+    database_url: str = os.getenv("DATABASE_URL", "postgresql://user:password@localhost:5432/research_db")
 
-    upload_dir: str = "uploads"
+    upload_dir: str = os.getenv("UPLOAD_DIR", "uploads")
     max_file_size: int = 50 * 1024 * 1024
 
-    vector_db_path: str = "vector_db/faiss_index"
+    vector_db_path: str = os.getenv("VECTOR_DB_PATH", "vector_db")
 
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     summarization_model: str = "facebook/bart-large-cnn"
     reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
-    llm_provider: str = "openai"
-    llm_model: str = "gpt-3.5-turbo"
 
     chunk_size: int = 700
     chunk_overlap: int = 100
@@ -30,8 +28,6 @@ class Settings(BaseSettings):
     semantic_weight: float = 0.65
     bm25_weight: float = 0.25
     metadata_weight: float = 0.10
-
-    cors_origins: list = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
     allowed_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
 

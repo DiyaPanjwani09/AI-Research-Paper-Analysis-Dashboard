@@ -25,10 +25,10 @@ A production-ready AI-powered Research Paper Intelligence Engine that enables us
 - **Frontend**: React, Tailwind CSS, Recharts
 - **Database**: PostgreSQL
 - **Vector Database**: FAISS
-- **ML/DL**: Scikit-learn, XGBoost, Sentence Transformers, SciBERT, BERT
+- **ML/DL**: Scikit-learn, Transformers, Sentence Transformers
 - **NLP**: spaCy, NLTK
-- **Analytics**: Pandas, NumPy, Plotly
-- **Deployment**: Docker, Docker Compose
+- **Analytics**: Pandas, NumPy
+- **Deployment**: Render (Web Service + Static Site)
 
 ## Features
 
@@ -73,7 +73,6 @@ A production-ready AI-powered Research Paper Intelligence Engine that enables us
 - Python 3.11+
 - Node.js 18+
 - PostgreSQL
-- Docker (optional)
 
 ### Installation
 
@@ -82,41 +81,27 @@ A production-ready AI-powered Research Paper Intelligence Engine that enables us
 git clone <repository-url>
 cd research-paper-intelligence-engine
 
-# Run setup script
-./setup.sh
-
-# Or manually:
-
 # Backend setup
 cd backend
 python -m venv venv
 source venv/bin/activate  # On Windows: .\venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r ../requirements.txt
 
 # Frontend setup
 cd ../frontend
 npm install
 
-# Preprocess datasets
-cd ../datasets
-python preprocessing.py
-
-# Initialize vector database
+# Configure environment
 cd ../backend
-python -c "from utils.vector_db import vector_db; vector_db.initialize_with_arxiv('../datasets/processed/arxiv_processed.csv')"
+cp .env.example .env
 
 # Run the application
 # Terminal 1: Start backend
-cd backend && python main.py
+uvicorn main:app --reload --port 8000
 
 # Terminal 2: Start frontend
-cd frontend && npm start
-```
-
-### Using Docker
-
-```bash
-docker-compose up --build
+cd ../frontend
+npm start
 ```
 
 ## Configuration
@@ -134,7 +119,6 @@ Edit `backend/.env`:
 ```
 ENVIRONMENT=development
 DATABASE_URL=postgresql://user:password@localhost:5432/research_db
-REDIS_URL=redis://localhost:6379
 ```
 
 ### Database Setup
@@ -156,9 +140,6 @@ GRANT ALL PRIVILEGES ON DATABASE research_db TO user;
 project/
 │
 ├── backend/
-│   ├── app/
-│   │   ├── main.py
-│   │   └── __init__.py
 │   ├── api/
 │   │   ├── routes/
 │   │   │   ├── upload.py
@@ -172,77 +153,49 @@ project/
 │   │   └── config.py
 │   ├── models/
 │   │   └── database.py
+│   ├── schemas/
+│   ├── services/
+│   │   ├── chunking_service.py
+│   │   ├── document_service.py
+│   │   ├── embedding_service.py
+│   │   ├── gap_detection_service.py
+│   │   ├── keyword_service.py
+│   │   ├── rag_service.py
+│   │   ├── recommendation_service.py
+│   │   ├── reranking_service.py
+│   │   ├── retrieval_service.py
+│   │   ├── summarization_service.py
+│   │   ├── trend_service.py
+│   │   └── vector_store.py
 │   ├── utils/
 │   │   ├── pdf_parser.py
-│   │   ├── summarizer.py
-│   │   ├── keyword_extractor.py
-│   │   ├── gap_detector.py
-│   │   ├── vector_db.py
-│   │   ├── rag_chatbot.py
+│   │   ├── text_utils.py
 │   │   └── database.py
 │   ├── tests/
+│   ├── main.py
 │   ├── requirements.txt
-│   ├── Dockerfile
 │   └── .env
 │
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   └── Navbar.js
+│   │   ├── context/
 │   │   ├── pages/
-│   │   │   ├── Home.js
-│   │   │   ├── Upload.js
-│   │   │   ├── Summary.js
-│   │   │   ├── SimilarPapers.js
-│   │   │   ├── Chat.js
-│   │   │   └── Analytics.js
-│   │   ├── services/
-│   │   ├── utils/
-│   │   ├── hooks/
+│   │   ├── config.js
+│   │   ├── api.js
 │   │   ├── App.js
 │   │   ├── index.js
 │   │   └── index.css
 │   ├── public/
 │   ├── package.json
-│   ├── tailwind.config.js
-│   ├── postcss.config.js
-│   ├── nginx.conf
-│   └── Dockerfile
-│
-├── models/
-│   ├── summarization/
-│   ├── keyword_extraction/
-│   ├── similarity/
-│   ├── topic_modeling/
-│   └── gap_detection/
-│
-├── datasets/
-│   ├── scitldr/
-│   ├── arxiv/
-│   ├── processed/
-│   └── preprocessing.py
-│
-├── notebooks/
-│   ├── README.md
-│   ├── data_preprocessing.ipynb
-│   ├── summarization_training.ipynb
-│   ├── similarity_search.ipynb
-│   ├── topic_modeling.ipynb
-│   ├── gap_detection.ipynb
-│   └── analytics_models.ipynb
+│   └── .env
 │
 ├── analytics/
-│   ├── trend_analysis.py
-│   └── topic_modeling.py
-│
-├── vector_db/
-│   └── faiss_index
-│
-├── uploads/
-│
+├── datasets/
+├── docs/
+├── render.yaml
 ├── requirements.txt
 ├── README.md
-├── docker-compose.yml
 └── setup.sh
 ```
 

@@ -2,7 +2,6 @@
   "name": "ai-research-intelligence-platform",
   "version": "2.0.0",
   "private": true,
-  "proxy": "http://localhost:8000",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

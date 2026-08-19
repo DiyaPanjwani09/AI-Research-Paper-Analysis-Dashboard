@@ -53,26 +53,15 @@ if command -v psql &> /dev/null; then
     echo "  psql -c \"CREATE USER user WITH PASSWORD 'password';\""
     echo "  psql -c \"GRANT ALL PRIVILEGES ON DATABASE research_db TO user;\""
 else
-    echo "PostgreSQL is not installed. Please install it or use Docker."
+    echo "PostgreSQL is not installed. Please install PostgreSQL to use the database features."
 fi
 
-echo "Step 4: Preprocessing datasets..."
-cd datasets
-python preprocessing.py
-
-echo "Step 5: Initializing vector database..."
-cd ../backend
-python -c "from utils.vector_db import vector_db; vector_db.initialize_with_arxiv('../datasets/processed/arxiv_processed.csv')"
-
-echo "=========================================="
-echo "Setup Complete!"
+echo "Step 4: Setup complete!"
 echo "=========================================="
 echo ""
 echo "To start the backend:"
-echo "  cd backend && python main.py"
+echo "  cd backend && uvicorn main:app --reload --port 8000"
 echo ""
 echo "To start the frontend:"
 echo "  cd frontend && npm start"
 echo ""
-echo "Or use Docker:"
-echo "  docker-compose up --build"

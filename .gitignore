@@ -61,5 +61,7 @@ dist/
 .DS_Store
 Thumbs.db
 
-# Docker
-docker-compose.override.yml
+# Environment variables
+.env
+backend/.env
+frontend/.env
