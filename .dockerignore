@@ -1,0 +1,13 @@
+node_modules
+build
+.venv
+venv
+__pycache__
+*.pyc
+.git
+.env
+uploads
+vector_db
+datasets/processed
+logs
+*.log

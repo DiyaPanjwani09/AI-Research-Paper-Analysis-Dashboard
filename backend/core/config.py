@@ -6,8 +6,10 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     app_name: str = "AI Research Intelligence Platform"
     environment: str = "development"
+    host: str = "0.0.0.0"
+    port: int = 8000
 
-    database_url: str = "postgresql://user:password@localhost:5432/research_db"
+    database_url: str = ""
 
     upload_dir: str = "uploads"
     max_file_size: int = 50 * 1024 * 1024
