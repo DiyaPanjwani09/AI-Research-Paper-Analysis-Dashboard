@@ -1,10 +1,10 @@
-services:
+﻿services:
   - type: web
     name: backend
     runtime: python
     rootDir: backend
-    buildCommand: pip install -r ../requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    buildCommand: "pip install -r ../requirements.txt"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -13,26 +13,19 @@ services:
       - key: ENVIRONMENT
         value: production
       - key: ALLOWED_ORIGINS
-        value: https://ai-research-intelligence-platform.onrender.com
-      - key: EMBEDDING_MODEL
-        value: sentence-transformers/all-MiniLM-L6-v2
-      - key: RERANKER_MODEL
-        value: cross-encoder/ms-marco-MiniLM-L-6-v2
-      - key: CHUNK_SIZE
-        value: 700
-      - key: TOP_K
-        value: 8
+        value: https://frontend.onrender.com
+      - key: MAX_FILE_SIZE
+        value: "52428800"
 
-  - type: web
+  - type: static
     name: frontend
-    runtime: static
     rootDir: frontend
-    buildCommand: npm install && npm run build
+    buildCommand: "npm install && npm run build"
     publishDir: build
     envVars:
       - key: REACT_APP_API_URL
         value: https://backend.onrender.com
 
-  - type: postgres
-    name: postgres
+databases:
+  - name: postgres
     plan: free
