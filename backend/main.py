@@ -7,6 +7,7 @@ import uvicorn
 
 from api.routes import upload, summarize, keywords, recommend, chat, analytics, gaps
 from core.config import settings
+from utils.database import create_tables
 
 logging.basicConfig(
     level=logging.INFO,
@@ -39,6 +40,16 @@ app.include_router(recommend.router, prefix="/api/v1", tags=["recommendation"])
 app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
 app.include_router(analytics.router, prefix="/api/v1", tags=["analytics"])
 app.include_router(gaps.router, prefix="/api/v1", tags=["research-gaps"])
+
+
+@app.on_event("startup")
+async def startup_event():
+    try:
+        create_tables()
+        logger.info("Database tables are ready")
+    except Exception:
+        logger.exception("Database initialization failed")
+        raise
 
 
 @app.get("/")
