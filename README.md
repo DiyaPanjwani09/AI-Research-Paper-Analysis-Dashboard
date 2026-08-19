@@ -124,43 +124,17 @@ Copy `.env.example` to `.env` in the `backend/` directory.
 
 ## Render Deployment
 
-### Deploy via Render Dashboard
+The repository includes a production-ready `render.yaml` Blueprint. Use **Render > New > Blueprint**, select this GitHub repository, and apply the detected Blueprint.
 
-#### 1. Create PostgreSQL Database
+The Blueprint creates:
 
-Render → New → PostgreSQL
-- Name: `postgres`
-- Region: Same as your services
+- `ai-research-backend`: FastAPI service with `/health` checks
+- `ai-research-frontend`: React static site with SPA rewrites
+- `ai-research-db`: Render Postgres database
 
-#### 2. Create Backend Web Service
+The frontend API URL and backend CORS origin are wired automatically from Render's generated service URLs, so you do not need to hardcode `*.onrender.com` URLs manually.
 
-Render → New → Web Service
-- **Repository:** `https://github.com/DiyaPanjwani09/AI-Research-Paper-Analysis-Dashboard`
-- **Root Directory:** `backend`
-- **Runtime:** Python 3.11
-- **Build Command:** `pip install -r ../requirements.txt`
-- **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
-- **Environment Variables:**
-  - `DATABASE_URL` → Link to the `postgres` service (set automatically)
-  - `ENVIRONMENT` → `production`
-  - `ALLOWED_ORIGINS` → `https://ai-research-intelligence-platform.onrender.com` (your frontend URL)
-
-#### 3. Create Frontend Static Site
-
-Render → New → Static Site
-- **Repository:** `https://github.com/DiyaPanjwani09/AI-Research-Paper-Analysis-Dashboard`
-- **Root Directory:** `frontend`
-- **Build Command:** `npm install && npm run build`
-- **Publish Directory:** `build`
-- **Environment Variable:**
-  - `REACT_APP_API_URL` → `https://backend.onrender.com` (your backend URL)
-
-#### 4. Deploy via render.yaml
-
-Add the `render.yaml` file to your repository and import it on Render:
-- Render → New → Blueprint
-- Select your repository
-- The `render.yaml` defines all three services (backend, frontend, postgres)
+See `RENDER_DEPLOY.md` for the step-by-step checklist and free-plan limitations.
 
 ## API Endpoints
 
